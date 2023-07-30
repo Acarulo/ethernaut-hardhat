@@ -2,7 +2,7 @@ import {loadFixture} from "@nomicfoundation/hardhat-toolbox/network-helpers"
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-describe("Level 13 - GatekeeperOne contract hack", () => {
+describe("Level 12 - Privacy contract hack", () => {
     async function setUp() {
         const [owner, hacker] = await ethers.getSigners();
 
