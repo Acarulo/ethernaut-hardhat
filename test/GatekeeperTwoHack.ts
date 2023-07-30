@@ -2,40 +2,25 @@ import {loadFixture} from "@nomicfoundation/hardhat-toolbox/network-helpers"
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-describe("Level 12 - Privacy contract hack", () => {
+describe("Level 14 - Gatekeeper Two contract hack", () => {
     async function setUp() {
         const [owner, hacker] = await ethers.getSigners();
 
-        const GatekeeperOneContract = await ethers.getContractFactory("GatekeeperOne");
-        const GatekeeperHackerContract = await ethers.getContractFactory("GatekeeperOneHacker");
+        const GatekeeperTwoContract = await ethers.getContractFactory("GatekeeperTwo");
+        const gatekeeperTwo = await GatekeeperTwoContract.deploy();
 
-        const gatekeeperOne = await GatekeeperOneContract.deploy();
-        const gatekeeperHacker = await GatekeeperHackerContract.deploy(await gatekeeperOne.getAddress());
-
-        return {owner, hacker, gatekeeperOne, gatekeeperHacker};
+        return {owner, hacker, gatekeeperTwo};
     };
     
     describe("When hacking", () => {
-        it("Retrieving the second elem from the data array should suffice to unlock the contract", async() => {
-            const {owner, hacker, gatekeeperOne, gatekeeperHacker} = await loadFixture(setUp);
+        it("Deploying the hacker contract should modify the entrant address", async() => {
+            const {owner, hacker, gatekeeperTwo} = await loadFixture(setUp);
+            const GatekeeperTwoHackerContract = await ethers.getContractFactory("GatekeeperTwoHacker");
 
-            expect(await gatekeeperOne.entrant()).to.equal(ethers.ZeroAddress);
+            expect(await gatekeeperTwo.entrant()).to.equal(ethers.ZeroAddress);
+            await GatekeeperTwoHackerContract.connect(hacker).deploy(await gatekeeperTwo.getAddress());
 
-            async function recursiveGasLimits(gasLimit: number): Promise<any> {
-                try {
-                    await gatekeeperHacker.connect(hacker).enterIntoGatekeeper({gasLimit: gasLimit});
-                } catch(e) {
-                    return await recursiveGasLimits(gasLimit + 1);
-                } finally {
-                    console.log("Gas limit is:", gasLimit);
-                }
-            }
-
-            let gasAmount = 2988581;
-            //await recursiveGasLimits(gasAmount);
-            
-            await gatekeeperHacker.connect(hacker).enterIntoGatekeeper({gasLimit: gasAmount});
-            expect(await gatekeeperOne.entrant()).to.equal(hacker.address);
+            expect(await gatekeeperTwo.entrant()).to.equal(hacker.address);
         });
     });
 });
