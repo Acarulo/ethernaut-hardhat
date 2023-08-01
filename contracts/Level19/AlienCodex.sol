@@ -1,6 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.5.0;
 
+/*
+  You've uncovered an Alien contract. Claim ownership to complete the level.
+
+  Things that might help
+  - Understanding how array storage works
+  - Understanding ABI specifications
+  - Using a very underhanded approach
+*/ 
+
 import './Ownable.sol';
 
 contract AlienCodex is Ownable {

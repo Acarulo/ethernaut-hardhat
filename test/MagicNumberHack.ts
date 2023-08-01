@@ -38,10 +38,23 @@ import { ethers } from "hardhat";
 
 describe("Level 18 - Magic number contract hack", () => {
     async function setUp() {
+      const [owner, hacker] = await ethers.getSigners();
+    
+      const MagicNumberContract = await ethers.getContractFactory("MagicNum");
+      const MagicNumberHackContract = await ethers.getContractFactory("MagicNumberHack");
 
+      const magicNum = await MagicNumberContract.deploy();
+      const magicHack = await MagicNumberHackContract.deploy(await magicNum.getAddress());
+
+      return {owner, hacker, magicNum, magicHack};
     };
 
     describe("When hacking", () => {
+      it("Hacking", async() => {
+         const {owner, hacker, magicNum, magicHack} = await loadFixture(setUp);
 
+         await magicHack.connect(hacker).setSolverInstance();
+
+      });
     });
 });
