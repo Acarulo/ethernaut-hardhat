@@ -7,14 +7,20 @@ pragma solidity ^0.8.0;
 
     If you can deny the owner from withdrawing funds when they call withdraw() 
     (whilst the contract still has funds, and the transaction is of 1M gas or less) you will win this level.
+
+    Note: I made a slight change to set the owner address at deployment.
 */ 
 
 contract Denial {
 
     address public partner; // withdrawal partner - pay the gas, split the withdraw
-    address public constant owner = address(0xA9E);
+    address public immutable owner;
     uint timeLastWithdrawn;
     mapping(address => uint) withdrawPartnerBalances; // keep track of partners balances
+
+    constructor() {
+        owner = msg.sender;
+    }
 
     function setWithdrawPartner(address _partner) public {
         partner = _partner;
