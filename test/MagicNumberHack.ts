@@ -52,9 +52,10 @@ describe("Level 18 - Magic number contract hack", () => {
     describe("When hacking", () => {
       it("Hacking", async() => {
          const {owner, hacker, magicNum, magicHack} = await loadFixture(setUp);
-
          await magicHack.connect(hacker).setSolverInstance();
 
+         const solver = await magicNum.solver();
+         //console.log(await solver.connect(hacker).whatIsTheMeaningOfLife());
       });
     });
 });
