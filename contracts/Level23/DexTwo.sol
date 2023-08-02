@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "openzeppelin-contracts-08/token/ERC20/IERC20.sol";
-import "openzeppelin-contracts-08/token/ERC20/ERC20.sol";
-import 'openzeppelin-contracts-08/access/Ownable.sol';
+import "../base/openzeppelin-08/IERC20.sol";
+import "../base/openzeppelin-08/ERC20.sol";
+import '../base/openzeppelin-08/Ownable.sol';
 
 /* 
     This level will ask you to break DexTwo, a subtlely modified Dex contract from the previous level, in a different way.

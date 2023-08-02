@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "openzeppelin-contracts-08/token/ERC20/IERC20.sol";
-import "openzeppelin-contracts-08/token/ERC20/ERC20.sol";
-import 'openzeppelin-contracts-08/access/Ownable.sol';
+import "../base/openzeppelin-08/IERC20.sol";
+import "../base/openzeppelin-08/ERC20.sol";
+import '../base/openzeppelin-08/Ownable.sol';
 
 /*
     The goal of this level is for you to hack the basic DEX contract below and steal the funds by price manipulation.
@@ -12,7 +12,11 @@ import 'openzeppelin-contracts-08/access/Ownable.sol';
     and allow the contract to report a "bad" price of the assets.
 
     Quick note
-    Normally, when you make a swap with an ERC20 token, you have to approve the contract to spend your tokens for you. To keep with the syntax of the game, we've just added the approve method to the contract itself. So feel free to use contract.approve(contract.address, <uint amount>) instead of calling the tokens directly, and it will automatically approve spending the two tokens by the desired amount. Feel free to ignore the SwappableToken contract otherwise.
+    Normally, when you make a swap with an ERC20 token, you have to approve the contract to spend your tokens for you. 
+    To keep with the syntax of the game, we've just added the approve method to the contract itself. 
+    So feel free to use contract.approve(contract.address, <uint amount>) instead of calling the tokens directly, 
+    and it will automatically approve spending the two tokens by the desired amount. 
+    Feel free to ignore the SwappableToken contract otherwise.
 
     Things that might help:
     - How is the price of the token calculated?
