@@ -2,7 +2,7 @@ import {loadFixture} from "@nomicfoundation/hardhat-toolbox/network-helpers"
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-describe("Level 23 - Puzzle wallet contract hack", () => {
+describe("Level 24 - Puzzle wallet contract hack", () => {
     async function setUp() {
         const [owner, admin, hacker] = await ethers.getSigners();
 
