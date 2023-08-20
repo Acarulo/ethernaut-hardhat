@@ -30,6 +30,15 @@ describe("Level 10 - Reentrancy contract hack", () => {
     
     describe("When hacking", () => {
         it("Call to the withdraw() method should remove full ETH balance", async() => {
+            /*
+             * Lack of the checks-effects-interaction pattern implementation is a source of Reentrancy hacks in smart contracts.
+             * The Reentrancy contract withdraw() method allows any caller to take some ETH balance from it, 
+             * given that it does not exceed the corresponding amount registered at the balances mapping.
+             * 
+             * However, the ETH transfer through the low-level call() method internally triggers the receive() method at the ReentrancyHack contract.
+             * Given that Reentrancy updates the caller claimable balance AFTER executing the call() method,
+             * its fallback function is able to loop over withdraw() until all funds are drained.   
+            **/
             const {owner, hacker, Alice, Bob, reentrancy, reentrancyHacker} = await loadFixture(setUp);
 
             // We simulate two donations to add some balance to the reentrancy contract.

@@ -1,12 +1,9 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import {Building} from "./Elevator.sol";
 // Provided that the function isLastFloor is not a getter, then it can modify the Building state.
 // Therefore, it can alter the state on the Elevator query's response.
-
-interface Building {
-    function isLastFloor(uint) external returns (bool);
-}
 
 interface IElevator {
     function goTo(uint _floor) external;

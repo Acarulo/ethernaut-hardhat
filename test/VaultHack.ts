@@ -16,6 +16,16 @@ describe("Level 08 - Vault contract hack", () => {
     
     describe("When hacking", () => {
         it("Hacker should be able to read the private password variable and unlock it", async() => {
+            /*
+             * EVM contracts are not meant to hold sensitive information!
+             * Private variables are only private in the execution context of the smart contracts.
+             * This means that the information they hold can be read by means of off-chain calls.
+             * 
+             * For instance, the ethers getStorage() method receives the contract address and the storage location
+             * and returns the value it holds.
+             * 
+             * By reading from the proper smart contract storage slot, the hacker can check the current password and unlock it. 
+            **/
             const {owner, hacker, vault} = await loadFixture(setUp);
 
             expect(await vault.locked()).to.equal(true);
