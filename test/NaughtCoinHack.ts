@@ -14,6 +14,11 @@ describe("Level 15 - Naught coin contract hack", () => {
     
     describe("When hacking", () => {
         it("Balance should transfer by allowed assistant", async() => {
+            /*
+             * Given the NaughtCoin contract timelock period, calling for the transfer method will revert.
+             * However, the ERC20 standard provides a bypass through the transferFrom method.
+             * Given that the transferFrom method is not modified by lockTokens, the hacker can bypass the timelock.
+            **/
             const {owner, ownerAssistant, target, coin} = await loadFixture(setUp);
 
             expect(await coin.balanceOf(owner.address)).to.equal(ethers.parseEther("1000000"));

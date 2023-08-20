@@ -8,7 +8,7 @@ pragma solidity ^0.6.0;
     This was deprecated from 0.5.0 onwards.
 */
 
-import "./SafeMath.sol";
+import "../base/openzeppelin-06/SafeMath.sol";
 
 contract Fallout {
   

@@ -17,6 +17,15 @@ describe("Level 13 - GatekeeperOne contract hack", () => {
     
     describe("When hacking", () => {
         it("Retrieving the second elem from the data array should suffice to unlock the contract", async() => {
+            /*
+             * A GatekeeperHacker contract is deployed in order to pass all three gates at once and for the hacker to become the entrant.
+             * 
+             * Gates requisites:
+             * The first gate requires the msg.sender to differ from the tx.origin, that's the reason why we need an intermediary contract.
+             * The second gate expects the gas left at the time of the check to be a multiple of 8191. We can estimate this with debugging tools (such as Remix).
+             * The third gate forces us to do some casting checks on the enter() bytes8 input.
+             * By masking out the last 8 bytes of the hacker address and 0xFFFFFFFF0000FFFF using the AND operator, we can pass the third gate. 
+            **/
             const {owner, hacker, gatekeeperOne, gatekeeperHacker} = await loadFixture(setUp);
 
             expect(await gatekeeperOne.entrant()).to.equal(ethers.ZeroAddress);
