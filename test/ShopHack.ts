@@ -17,6 +17,11 @@ describe("Level 21 - Shop contract hack", () => {
     
     describe("When hacking", () => {
         it("Hacker should be able to buy the item for 25 units instead of 100", async() => {
+            /*
+             * The ShopHacker price() getter feeds from the Shop's isSold() getter.
+             * Inline assembly allows the price getter to return a conditional value based on the victim contract's getter.
+             * This way, it can return two different values within the very same buy() call.
+            **/
             const {owner, hacker, shop, buyer} = await loadFixture(setUp);
 
             expect(await shop.isSold()).to.equal(false);

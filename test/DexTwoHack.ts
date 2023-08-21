@@ -28,6 +28,11 @@ describe("Level 23 - DexTwo contract hack", () => {
     
     describe("When hacking", () => {
         it("Hacker should deplete the DEX by iteratively swapping from token1 to itself (same with token 2) back and forth", async() => {
+            /*
+             * Provided that the swap method has now no checks on the tokens that are traded,
+             * the hacker is able to deploy his own token -which we call token3- and use it as if it were a traded token.
+             * That way, he can deplete the DEX from its both valid tokens balances.
+            **/
             const {owner, hacker, dex, token1, token2, token3Hacker} = await loadFixture(setUp);
             
             expect(await token1.balanceOf(await dex.getAddress())).to.equal(BigInt(100));

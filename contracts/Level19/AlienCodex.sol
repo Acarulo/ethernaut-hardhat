@@ -10,7 +10,7 @@ pragma solidity ^0.5.0;
   - Using a very underhanded approach
 */ 
 
-import './Ownable.sol';
+import '../base/openzeppelin-05/Ownable.sol';
 
 contract AlienCodex is Ownable {
 

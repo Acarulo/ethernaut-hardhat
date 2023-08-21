@@ -19,7 +19,7 @@ contract BuyerHacker {
         shop.buy();
     }
 
-    // A traditional solidity-coded view function cannot return a conditional output.
+    // A traditional plain solidity-coded view function cannot return a conditional output.
     // However, assembly allows as to impose conditionality based on a switch case logic. 
     function price() external view returns (uint) {
         bool soldItem = shop.isSold();

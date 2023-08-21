@@ -27,6 +27,14 @@ describe("Level 22 - Dex contract hack", () => {
     
     describe("When hacking", () => {
         it("Hacker should deplete the DEX by iteratively swapping from token1 to token2 back and forth", async() => {
+            /*
+             * Tokens with zero decimals are prone to rounding errors, provided that Solidity's division has no decimal precision.
+             * In the ERC20 with metadata implementation, decimals are expressed in terms of decimal powers.
+             * For instance, for an ERC20 token with two-decimal precision, its unit is expressed as 10 ** 2 = 100.
+             * 
+             * In this case, we stand at tokens with zero decimals.
+             * Therefore, we can iteratively trade them until we deplete the DEX from its token2 balance.
+            **/
             const {owner, hacker, dex, token1, token2} = await loadFixture(setUp);
             
             expect(await token1.balanceOf(await dex.getAddress())).to.equal(BigInt(100));

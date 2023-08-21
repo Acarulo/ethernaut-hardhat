@@ -15,6 +15,21 @@ describe("Level 17 - Recovery contract hack", () => {
     
     describe("When hacking", () => {
         it("Token address is recovered by computing the RLP serial value", async() => {
+            /*
+             * In order to calculate the missing token address, the hacker must check at the correct Recovery contract nonce
+             * that has been used to create the token.
+             * 
+             * Nonce 0 points to the Recovery contract construction.
+             * Nonce 1, the very next transaction, points to the generateToken() call.
+             * 
+             * That way, we can compute the Token instance address by computing the recursive-length prefix (RLP) 
+             * of the Recovery contract address and the correct nonce, which is 1 in this case.
+             * 
+             * RLP is an encoding/decoding algorithm that serializes data and allows for quick reconstruction.
+             * For more on RLP, check the following links:
+             * * https://ethereum.org/en/developers/docs/data-structures-and-encoding/rlp/ 
+             * * https://medium.com/coinmonks/data-structure-in-ethereum-episode-1-recursive-length-prefix-rlp-encoding-decoding-d1016832f919
+            **/
             const {owner, hacker, recovery} = await loadFixture(setUp);
 
             await recovery.connect(owner).generateToken("Token", ethers.parseEther("1823"));

@@ -25,6 +25,11 @@ describe("Level 20 - Denial contract hack", () => {
     
     describe("When hacking", () => {
         it("Setting the withdrawal partner should block withdrawals due to the fallback assertion", async() => {
+            /*
+             * The DenialHacker contract's receive method asserts to false by default.
+             * Therefore, any ETH transfer addressed to it will revert.
+             * That way, we prevent the contract's owner from withdrawing funds from Denial. 
+            **/
             const {owner, hacker, denial, denialHacker} = await loadFixture(setUp);
 
             await denialHacker.connect(hacker).setWithdrawPartner();
